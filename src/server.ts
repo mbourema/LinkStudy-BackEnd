@@ -4,6 +4,7 @@ import { connectDB } from "./db/index";
 import { errorHandler } from "./middleware/errorHandler";
 import { setupSwagger } from "./utils/swagger";
 import dotenv from "dotenv";
+import cors from "cors";
 
 // Charger les variables d'environnement
 dotenv.config();
@@ -13,7 +14,15 @@ export const app = express(); // Instance d'express qui sera utilisée pour déf
 /** Middleware pour parser le JSON, soit permettre à l'application Express de comprendre et traiter les requêtes contenant des données en format JSON.
 Cela va automatiquement analyser les corps des requêtes et les rendre accessible via req.body
 */
-app.use(express.json()); 
+app.use(express.json());
+
+// Configuration de CORS
+const corsOptions = {
+  origin: 'http://localhost:5173', // Remplace par l'URL de ton frontend React si elle est différente
+  methods: 'GET,POST,PUT,DELETE', // Les méthodes HTTP autorisées
+  allowedHeaders: 'Content-Type,Authorization', // Les en-têtes autorisés
+};
+app.use(cors(corsOptions)); // Ajoute CORS à ton application Express
 
 // Appel de setupSwagger qui se trouve dans le fichier ./utils/swagger pour configurer swagger.
 setupSwagger(app);
