@@ -6,20 +6,20 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 
 
-export const authenticate = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.headers.authorization;
+export const authenticate = (req: Request, res: Response, next: NextFunction): void => {
+  const token = req.headers.authorization?.split(" ")[1]; // Extraire uniquement le token après "Bearer"
+
   if (!token) {
-    return res.status(401).json({ error: "Accès interdit. Token manquant." });
+    res.status(401).json({ error: "Accès interdit. Token manquant." });
+    return;
   }
-  //Si un token est trouvé, le middleware tente de le vérifier à l'aide de la méthode jwt.verify()
+
   try {
-    //Fonction qui vérifie la validité du token en le décodant avec la clé secrète définie dans les variables d'environnement
-    //Si le token est valide, jwt.verify renvoie les données décodées
     const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
     (req as any).user = decoded;
-    next();
+    next(); // Passer au middleware suivant
   } catch (error) {
-    return res.status(401).json({ error: "Token invalide." });
+    res.status(401).json({ error: "Token invalide." });
   }
 };
 
@@ -28,9 +28,4 @@ export const hashPassword = async (password: string): Promise<string> => {
   const salt = await bcrypt.genSalt(10); // Générer un "sel" (salt)
   const hashedPassword = await bcrypt.hash(password, salt); // Hacher le mot de passe
   return hashedPassword;
-};
-
-// Fonction pour vérifier si un mot de passe correspond à un mot de passe haché
-export const comparePassword = async (password: string, hashedPassword: string): Promise<boolean> => {
-  return bcrypt.compare(password, hashedPassword); // Comparer le mot de passe en clair avec le haché
 };

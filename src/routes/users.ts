@@ -1,5 +1,6 @@
 import { Router } from "express";
-import { getUsers, createUser, updateUser, deleteUser} from "../controllers/users";
+import { getUsers, createUser, updateUser, deleteUser, loginUser} from "../controllers/users";
+import { authenticate } from "../middleware/auth";
 import { validateUser } from "../middleware/validation";
 
 const router = Router();
@@ -73,6 +74,33 @@ router.post("/", createUser);
 
 /**
  * @swagger
+ * /users/login:
+ *   post:
+ *     tags: [Users]
+ *     summary: Connecter un utilisateur
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: "user@example.com"
+ *               password:
+ *                 type: string
+ *                 example: "Password123!"
+ *     responses:
+ *       200:
+ *         description: Connexion réussie, retourne un token JWT
+ *       401:
+ *         description: Email ou mot de passe incorrect
+ */
+router.post("/login", loginUser);
+
+/**
+ * @swagger
  * /users/{email}:
  *   put:
  *     tags: [Users]
@@ -107,7 +135,7 @@ router.post("/", createUser);
  *       404:
  *         description: Utilisateur non trouvé
  */
-router.put("/:email", updateUser);
+router.put("/:email", authenticate, updateUser);
 
 /**
  * @swagger
