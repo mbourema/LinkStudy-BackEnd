@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "start": "npx tsx src/server.ts"
   },
   "author": "",
   "license": "ISC",
