@@ -16,9 +16,15 @@ Cela va automatiquement analyser les corps des requêtes et les rendre accessibl
 */
 app.use(express.json());
 
+// Défini les domaines autorisés
+const allowedOrigins = [
+  'http://localhost:5173', 
+  'https://link-study-front-end.vercel.app', // Remplace avec ton vrai domaine Vercel
+];
+
 // Configuration de CORS
 const corsOptions = {
-  origin: 'http://localhost:5173', // Autorisation du frontend à accéder à l'API
+  origin: allowedOrigins, // Autorisation du frontend à accéder à l'API
   methods: 'GET,POST,PUT,DELETE', // Les méthodes HTTP autorisées
   allowedHeaders: 'Content-Type,Authorization', // Les en-têtes autorisés
 };
