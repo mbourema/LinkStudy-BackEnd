@@ -36,8 +36,17 @@ app.use(errorHandler);
 // Connection à la base de données et démarrage du serveur
 const PORT = process.env.PORT || 5000; // Fonction qui se connecte à la base de données. Elle est exécutée avant de démarrer le serveur pour s'assurer
 // que l'application est bien connectée à la base de données avant de recevoir des requêtes.
-app.listen(PORT, async () => {
-  await connectDB();
-  console.log(`Server started at http://localhost:${PORT}`);
-  console.log(`📄 Swagger Docs: http://localhost:${PORT}/api-docs`);
-});
+async function startServer() {
+  try {
+    await connectDB();
+    app.listen(PORT, () => {
+      console.log(`✅ Serveur démarré sur http://localhost:${PORT}`);
+      console.log(`📄 Swagger Docs: http://localhost:${PORT}/api-docs`);
+    });
+  } catch (error) {
+    console.error('❌ Impossible de démarrer le serveur sans la base de données');
+    process.exit(1);
+  }
+}
+
+startServer();
