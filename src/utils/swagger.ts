@@ -15,9 +15,14 @@ const options = {
     },
     servers: [
       {
-        url: "http://localhost:5000", // L'URL du serveur pour Swagger
+        url: "http://localhost:5000",
+        description: "Serveur local pour développement",
       },
-    ],
+      {
+        url: "https://linkstudy-backend-production.up.railway.app",
+        description: "Serveur distant Railway production",
+      }
+    ],    
   },
   apis: ["./src/routes/*.ts"], // Emplacement des fichiers à analyser pour générer la documentation
 };
